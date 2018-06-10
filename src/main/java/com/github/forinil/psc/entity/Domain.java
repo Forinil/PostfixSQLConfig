@@ -9,5 +9,5 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(staticName = "of")
 public class Domain {
     @NotNull
-    private String domain;
+    private final String domain;
 }

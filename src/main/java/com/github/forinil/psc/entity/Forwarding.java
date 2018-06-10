@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(staticName = "of")
 public class Forwarding {
     @NotNull
-    private String source;
+    private final String source;
 
     @NotNull
-    private String destination;
+    private final String destination;
 }

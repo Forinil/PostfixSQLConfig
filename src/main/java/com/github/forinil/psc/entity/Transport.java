@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(staticName = "of")
 public class Transport {
     @NotNull
-    private String domain;
+    private final String domain;
 
     @NotNull
-    private String transport;
+    private final String transport;
 }
