@@ -20,6 +20,7 @@ import java.util.ArrayList;
 @SpringBootTest
 public class DomainRepositoryImplIT {
     private static final int CAPACITY = 2;
+
     @Autowired
     private DomainRepository domainRepository;
 
