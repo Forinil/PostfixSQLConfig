@@ -70,7 +70,7 @@ public class DomainRepositoryImplIT {
     }
 
     @Test(expected = NotUpdatableException.class)
-    public void testUpdate() throws NotUpdatableException {
+    public void testUpdate() throws NotUpdatableException, DataAccessException {
         val domain = Domain.of("test");
 
         domainRepository.update(domain);
