@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    tomcat:
+      username: ${db.user}
+      password: ${db.password}
+      driver-class-name: com.mysql.jdbc.Driver
+      url: ${db.url}
+    platform: mysql

@@ -1,0 +1,12 @@
+logging:
+  level:
+    com:
+      github:
+        forinil:
+          psc: DEBUG
+spring:
+  jackson:
+    serialization:
+      indent-output: true
+  messages:
+    cache-seconds: 0

@@ -1,0 +1,13 @@
+logging:
+  file: ${user.dir}/logs/psc.log
+spring:
+  datasource:
+    jmx-enabled: true
+    type: org.apache.tomcat.jdbc.pool.DataSource
+  flyway:
+    locations: db/migration
+  messages:
+    encoding: UTF-8
+    fallback-to-system-locale: false
+  thymeleaf:
+    mode: HTML5

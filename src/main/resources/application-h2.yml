@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    tomcat:
+      username: sa
+      password: sa123
+      driver-class-name: org.h2.Driver
+      name: psc
+    platform: h2
+  h2:
+    console:
+      enabled: true
