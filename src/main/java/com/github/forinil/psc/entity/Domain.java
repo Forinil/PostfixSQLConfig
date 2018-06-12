@@ -7,7 +7,12 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor(staticName = "of")
-public class Domain {
+public class Domain implements Entity<String> {
     @NotNull
     private final String domain;
+
+    @Override
+    public String id() {
+        return domain;
+    }
 }

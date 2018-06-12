@@ -1,16 +1,18 @@
 package com.github.forinil.psc.repository.impl;
 
 import com.github.forinil.psc.entity.Domain;
+import com.github.forinil.psc.entity.Entity;
+import com.github.forinil.psc.exception.DataAccessException;
 import com.github.forinil.psc.exception.NotUpdatableException;
 import com.github.forinil.psc.mappers.DomainRowMapper;
 import com.github.forinil.psc.repository.DomainRepository;
+import com.github.forinil.psc.sql.DomainSqlParameterSource;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,76 +23,28 @@ import java.util.Map;
 
 @Slf4j
 @Repository
-public class DomainRepositoryImpl implements DomainRepository {
-    private JdbcTemplate jdbcTemplate;
-    private DomainRowMapper domainRowMapper;
+public class DomainRepositoryImpl extends AbstractRepository<String, Domain> implements DomainRepository {
 
-    public DomainRepositoryImpl(@Autowired JdbcTemplate jdbcTemplate,
+    public DomainRepositoryImpl(@Autowired NamedParameterJdbcTemplate jdbcTemplate,
                                 @Autowired DomainRowMapper domainRowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.domainRowMapper = domainRowMapper;
+        super(jdbcTemplate, domainRowMapper);
+        insertSqlQuery = "INSERT INTO domains (domain) VALUES (:domain)";
+        selectSqlQuery = "SELECT * FROM domains WHERE domain = :id";
+        deleteSqlQuery = "DELETE FROM domains WHERE domain = :id";
+        selectAllSqlQuery = "SELECT * FROM domains";
+        deleteAllSqlQuery = "DELETE FROM domains";
     }
 
+    @Override
     @Transactional
-    @Override
-    public String create(@NonNull Domain domain) throws com.github.forinil.psc.exception.DataAccessException {
-        try {
-            jdbcTemplate.update("INSERT INTO domains (domain) VALUES (?)", domain.getDomain());
-        } catch (DataAccessException e) {
-            logger.error("Error saving domain from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
-        }
-        return domain.getDomain();
-    }
-
-    @Transactional(propagation = Propagation.SUPPORTS)
-    @Override
-    public Domain read(@NonNull String domain) throws com.github.forinil.psc.exception.DataAccessException {
-        try {
-            return jdbcTemplate.queryForObject("SELECT * FROM domains WHERE domain = ?", new Object[] {domain}, domainRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (DataAccessException e) {
-            logger.error("Error reading domain from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
-        }
-    }
-
-    @Transactional
-    @Override
-    public void update(@NonNull Domain domain) throws NotUpdatableException {
+    public void update(Domain entity) throws NotUpdatableException {
         throw new NotUpdatableException("Domain entities are read-only");
     }
 
-    @Transactional
     @Override
-    public void deleteById(@NonNull String domain) throws com.github.forinil.psc.exception.DataAccessException {
-        try {
-            jdbcTemplate.update("DELETE FROM domains WHERE domain = ?", domain);
-        } catch (DataAccessException e) {
-            logger.error("Error deleting domain from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
-        }
-    }
-
-    @Transactional
-    @Override
-    public void delete(@NonNull Domain domain) throws com.github.forinil.psc.exception.DataAccessException {
-        deleteById(domain.getDomain());
-    }
-
     @Transactional(propagation = Propagation.SUPPORTS)
-    @Override
     public List<Domain> readAll() throws com.github.forinil.psc.exception.DataAccessException {
-        List<Map<String, Object>> resultSet;
-
-        try {
-            resultSet = jdbcTemplate.queryForList("SELECT * FROM domains");
-        } catch (DataAccessException e) {
-            logger.error("Error reading domain from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
-        }
-
+        val resultSet = readAllInternal();
         val domains = new ArrayList<Domain>(resultSet.size());
 
         for (Map result: resultSet) {
@@ -100,14 +54,8 @@ public class DomainRepositoryImpl implements DomainRepository {
         return domains;
     }
 
-    @Transactional
     @Override
-    public void deleteAll() throws com.github.forinil.psc.exception.DataAccessException {
-        try {
-            jdbcTemplate.update("DELETE FROM domains");
-        } catch (DataAccessException e) {
-            logger.error("Error reading domain from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
-        }
+    SqlParameterSource getParameterSourceFromEntity(Domain entity) {
+        return new DomainSqlParameterSource(entity);
     }
 }
