@@ -8,6 +8,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,12 +17,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements Repository<ID, EntityType> {
     private NamedParameterJdbcTemplate jdbcTemplate;
-    private RowMapper rowMapper;
+    private RowMapper<EntityType> rowMapper;
 
     String insertSqlQuery = "";
     String selectSqlQuery = "";
@@ -31,7 +31,7 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
     String deleteAllSqlQuery = "";
 
     AbstractRepository(NamedParameterJdbcTemplate jdbcTemplate,
-                       RowMapper rowMapper) {
+                       RowMapper<EntityType> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.rowMapper = rowMapper;
     }
@@ -54,7 +54,7 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
     @SuppressWarnings("unchecked")
     public EntityType read(@NonNull ID id) throws DataAccessException {
         try {
-            return (EntityType) jdbcTemplate.queryForObject(selectSqlQuery, getIDProvidingParameterSource(id), rowMapper);
+            return jdbcTemplate.queryForObject(selectSqlQuery, getIDProvidingParameterSource(id), rowMapper);
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (org.springframework.dao.DataAccessException e) {
@@ -104,18 +104,20 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
         }
     }
 
-    abstract SqlParameterSource getParameterSourceFromEntity(@NonNull EntityType entity);
-
-    private SqlParameterSource getIDProvidingParameterSource(@NonNull ID id) {
-        return new MapSqlParameterSource("id", id);
-    }
-
-    List<Map<String, Object>> readAllInternal() throws DataAccessException {
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<EntityType> readAll() throws com.github.forinil.psc.exception.DataAccessException {
         try {
-            return jdbcTemplate.queryForList(selectAllSqlQuery, EmptySqlParameterSource.INSTANCE);
+            return jdbcTemplate.query(selectAllSqlQuery, new EmptySqlParameterSource(), new RowMapperResultSetExtractor<EntityType>(rowMapper));
         } catch (org.springframework.dao.DataAccessException e) {
             logger.error("Error reading all records from database", e);
             throw new com.github.forinil.psc.exception.DataAccessException(e);
         }
+    }
+
+    abstract SqlParameterSource getParameterSourceFromEntity(@NonNull EntityType entity);
+
+    private SqlParameterSource getIDProvidingParameterSource(@NonNull ID id) {
+        return new MapSqlParameterSource("id", id);
     }
 }
