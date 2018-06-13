@@ -23,12 +23,12 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
     private NamedParameterJdbcTemplate jdbcTemplate;
     private RowMapper<EntityType> rowMapper;
 
-    String insertSqlQuery = "";
-    String selectSqlQuery = "";
-    String updateSqlQuery = "";
-    String deleteSqlQuery = "";
-    String selectAllSqlQuery = "";
-    String deleteAllSqlQuery = "";
+    String insertSqlQuery;
+    String selectSqlQuery;
+    String updateSqlQuery;
+    String deleteSqlQuery;
+    String selectAllSqlQuery;
+    String deleteAllSqlQuery;
 
     AbstractRepository(NamedParameterJdbcTemplate jdbcTemplate,
                        RowMapper<EntityType> rowMapper) {

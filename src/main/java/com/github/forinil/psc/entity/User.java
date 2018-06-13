@@ -8,11 +8,16 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor(staticName = "of")
-public class User {
+public class User implements Entity<String> {
     @NotNull
     @Email
     private final String email;
 
     @NotNull
     private final String password;
+
+    @Override
+    public String id() {
+        return email;
+    }
 }

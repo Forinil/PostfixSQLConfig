@@ -18,7 +18,7 @@ public class DomainSqlParameterSource extends AbstractEntitySqlParameterSource<S
 
     @Override
     public Object getValue(String paramName) throws IllegalArgumentException {
-        if (paramName != null && paramName.endsWith("domain")) {
+        if (hasValue(paramName)) {
             return entity.getDomain();
         }
         throw new IllegalArgumentException("Unknown parameter name");
