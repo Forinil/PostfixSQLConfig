@@ -1,5 +1,6 @@
 package com.github.forinil.psc.repository;
 
+import com.github.forinil.psc.PostfixSQLConfigApplication;
 import com.github.forinil.psc.entity.Domain;
 import com.github.forinil.psc.exception.DataAccessException;
 import com.github.forinil.psc.exception.NotUpdatableException;
@@ -17,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = PostfixSQLConfigApplication.class)
 public class DomainRepositoryImplIT {
     private static final int CAPACITY = 2;
 

@@ -6,7 +6,7 @@
     <groupId>com.github.forinil.psc</groupId>
     <artifactId>postfixsqlconfig</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>postfixsqlconfig</name>
     <description>Application for managing Postfix SQL configuration with schema as described in
@@ -24,7 +24,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.6</java.version>
-        <start-class>com.github.forinil.psc.PostfixSQLConfigApplication</start-class>
+        <start-class>com.github.forinil.psc.PostfixSQLConfigWebApplication</start-class>
 
         <commons-codec.version>1.11</commons-codec.version>
 
