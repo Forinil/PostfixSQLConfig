@@ -1,11 +1,11 @@
 package com.github.forinil.psc.repository.impl;
 
 import com.github.forinil.psc.entity.Entity;
-import com.github.forinil.psc.exception.DataAccessException;
-import com.github.forinil.psc.exception.NotUpdatableException;
+import com.github.forinil.psc.exception.database.DatabaseException;
 import com.github.forinil.psc.repository.Repository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
@@ -39,12 +39,12 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
     @Override
     @Transactional
     @SuppressWarnings("unchecked")
-    public ID create(@NonNull Entity<ID> entity) throws DataAccessException {
-        try {
+    public ID create(@NonNull Entity<ID> entity) throws DatabaseException {
+            try {
             jdbcTemplate.update(insertSqlQuery, getParameterSourceFromEntity((EntityType) entity));
-        } catch (org.springframework.dao.DataAccessException e) {
+        } catch (DataAccessException e) {
             logger.error("Error inserting entity to database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
+            throw new DatabaseException(e);
         }
         return entity.id();
     }
@@ -52,42 +52,42 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     @SuppressWarnings("unchecked")
-    public EntityType read(@NonNull ID id) throws DataAccessException {
+    public EntityType read(@NonNull ID id) throws DatabaseException {
         try {
             return jdbcTemplate.queryForObject(selectSqlQuery, getIDProvidingParameterSource(id), rowMapper);
         } catch (EmptyResultDataAccessException e) {
             return null;
-        } catch (org.springframework.dao.DataAccessException e) {
+        } catch (DataAccessException e) {
             logger.error("Error reading entity from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
+            throw new DatabaseException(e);
         }
     }
 
     @Override
     @Transactional
-    public void update(@NonNull EntityType entity) throws NotUpdatableException, DataAccessException {
+    public void update(@NonNull EntityType entity) throws DatabaseException {
         try {
             jdbcTemplate.update(updateSqlQuery, getParameterSourceFromEntity(entity));
-        } catch (org.springframework.dao.DataAccessException e) {
+        } catch (DataAccessException e) {
             logger.error("Error inserting entity to database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
+            throw new DatabaseException(e);
         }
     }
 
     @Override
     @Transactional
-    public void deleteById(ID id) throws DataAccessException {
+    public void deleteById(ID id) throws DatabaseException {
         try {
             jdbcTemplate.update(deleteSqlQuery, getIDProvidingParameterSource(id));
-        } catch (org.springframework.dao.DataAccessException e) {
+        } catch (DataAccessException e) {
             logger.error("Error deleting entity from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
+            throw new DatabaseException(e);
         }
     }
 
     @Override
     @Transactional
-    public void delete(Entity<ID> entity) throws DataAccessException {
+    public void delete(Entity<ID> entity) throws DatabaseException {
         deleteById(entity.id());
     }
 
@@ -95,23 +95,23 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
 
     @Override
     @Transactional
-    public void deleteAll() throws DataAccessException {
+    public void deleteAll() throws DatabaseException {
         try {
             jdbcTemplate.update(deleteAllSqlQuery, new EmptySqlParameterSource());
-        } catch (org.springframework.dao.DataAccessException e) {
+        } catch (DataAccessException e) {
             logger.error("Error deleting all records from table", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
+            throw new DatabaseException(e);
         }
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public List<EntityType> readAll() throws com.github.forinil.psc.exception.DataAccessException {
+    public List<EntityType> readAll() throws DatabaseException {
         try {
             return jdbcTemplate.query(selectAllSqlQuery, new EmptySqlParameterSource(), new RowMapperResultSetExtractor<EntityType>(rowMapper));
-        } catch (org.springframework.dao.DataAccessException e) {
+        } catch (DataAccessException e) {
             logger.error("Error reading all records from database", e);
-            throw new com.github.forinil.psc.exception.DataAccessException(e);
+            throw new DatabaseException(e);
         }
     }
 

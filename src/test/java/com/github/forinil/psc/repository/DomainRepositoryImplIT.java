@@ -2,8 +2,8 @@ package com.github.forinil.psc.repository;
 
 import com.github.forinil.psc.PostfixSQLConfigApplication;
 import com.github.forinil.psc.entity.Domain;
-import com.github.forinil.psc.exception.DataAccessException;
-import com.github.forinil.psc.exception.NotUpdatableException;
+import com.github.forinil.psc.exception.database.ActionNotSupportedException;
+import com.github.forinil.psc.exception.database.DatabaseException;
 import lombok.val;
 import org.junit.After;
 import org.junit.Assert;
@@ -43,7 +43,7 @@ public class DomainRepositoryImplIT {
     }
 
     @Test
-    public void testCreatingDomain() throws DataAccessException {
+    public void testCreatingDomain() throws DatabaseException {
         val domainString = "localhost.localdomain";
         val domain = Domain.of(domainString);
 
@@ -52,7 +52,7 @@ public class DomainRepositoryImplIT {
     }
 
     @Test
-    public void testReadingDomain() throws DataAccessException {
+    public void testReadingDomain() throws DatabaseException {
         val domainString = "localhost.localdomain";
         val domain = Domain.of(domainString);
 
@@ -64,21 +64,21 @@ public class DomainRepositoryImplIT {
     }
 
     @Test
-    public void testReadAll() throws DataAccessException {
+    public void testReadAll() throws DatabaseException {
         val domains = domainRepository.readAll();
 
         Assert.assertEquals(CAPACITY, domains.size());
     }
 
-    @Test(expected = NotUpdatableException.class)
-    public void testUpdate() throws NotUpdatableException, DataAccessException {
+    @Test(expected = ActionNotSupportedException.class)
+    public void testUpdate() throws DatabaseException {
         val domain = Domain.of("test");
 
         domainRepository.update(domain);
     }
 
     @Test
-    public void testDelete() throws DataAccessException {
+    public void testDelete() throws DatabaseException {
         val domain = Domain.of("localhost");
 
         domainRepository.delete(domain);
@@ -89,7 +89,7 @@ public class DomainRepositoryImplIT {
     }
 
     @Test
-    public void testDeleteAll() throws DataAccessException {
+    public void testDeleteAll() throws DatabaseException {
         domainRepository.deleteAll();
 
         val domains = domainRepository.readAll();

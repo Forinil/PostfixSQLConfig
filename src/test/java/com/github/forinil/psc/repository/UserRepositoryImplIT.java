@@ -2,8 +2,7 @@ package com.github.forinil.psc.repository;
 
 import com.github.forinil.psc.PostfixSQLConfigApplication;
 import com.github.forinil.psc.entity.User;
-import com.github.forinil.psc.exception.DataAccessException;
-import com.github.forinil.psc.exception.NotUpdatableException;
+import com.github.forinil.psc.exception.database.DatabaseException;
 import lombok.val;
 import org.junit.After;
 import org.junit.Assert;
@@ -43,7 +42,7 @@ public class UserRepositoryImplIT {
     }
 
     @Test
-    public void testCreatingDomain() throws DataAccessException {
+    public void testCreatingDomain() throws DatabaseException {
         val userString = "kbotor";
         val user = User.of(userString, userString);
 
@@ -52,7 +51,7 @@ public class UserRepositoryImplIT {
     }
 
     @Test
-    public void testReadingDomain() throws DataAccessException {
+    public void testReadingDomain() throws DatabaseException {
         val userString = "kbotor";
         val user = User.of(userString, userString);
 
@@ -64,14 +63,14 @@ public class UserRepositoryImplIT {
     }
 
     @Test
-    public void testReadAll() throws DataAccessException {
+    public void testReadAll() throws DatabaseException {
         val users = userRepository.readAll();
 
         Assert.assertEquals(CAPACITY, users.size());
     }
 
     @Test
-    public void testUpdate() throws NotUpdatableException, DataAccessException {
+    public void testUpdate() throws DatabaseException {
         val user = User.of("user1", "new_password");
         userRepository.update(user);
 
@@ -80,7 +79,7 @@ public class UserRepositoryImplIT {
     }
 
     @Test
-    public void testDelete() throws DataAccessException {
+    public void testDelete() throws DatabaseException {
         val userString = "user1";
         val user = User.of(userString, userString);
 
@@ -92,7 +91,7 @@ public class UserRepositoryImplIT {
     }
 
     @Test
-    public void testDeleteAll() throws DataAccessException {
+    public void testDeleteAll() throws DatabaseException {
         userRepository.deleteAll();
 
         val domains = userRepository.readAll();

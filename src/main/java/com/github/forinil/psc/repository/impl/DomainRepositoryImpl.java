@@ -1,7 +1,8 @@
 package com.github.forinil.psc.repository.impl;
 
 import com.github.forinil.psc.entity.Domain;
-import com.github.forinil.psc.exception.NotUpdatableException;
+import com.github.forinil.psc.exception.database.ActionNotSupportedException;
+import com.github.forinil.psc.exception.database.DatabaseException;
 import com.github.forinil.psc.mappers.DomainRowMapper;
 import com.github.forinil.psc.repository.DomainRepository;
 import com.github.forinil.psc.sql.DomainSqlParameterSource;
@@ -26,8 +27,8 @@ public class DomainRepositoryImpl extends AbstractRepository<String, Domain> imp
 
     @Override
     @Transactional
-    public void update(Domain entity) throws NotUpdatableException {
-        throw new NotUpdatableException("Domain entities are read-only");
+    public void update(Domain entity) throws DatabaseException {
+        throw new ActionNotSupportedException("Domain entities are read-only");
     }
 
     @Override
