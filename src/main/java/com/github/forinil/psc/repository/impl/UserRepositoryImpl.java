@@ -17,7 +17,7 @@ public class UserRepositoryImpl extends AbstractRepository<String, User> impleme
         super(jdbcTemplate, rowMapper);
         insertSqlQuery = "INSERT INTO users (email, password) VALUES (:email, :password)";
         selectSqlQuery = "SELECT * FROM users WHERE email = :id";
-        updateSqlQuery = "UPDATE users SET password = :password";
+        updateSqlQuery = "UPDATE users SET password = :password WHERE email = :email";
         deleteSqlQuery = "DELETE FROM users WHERE email = :id";
         selectAllSqlQuery = "SELECT * FROM users";
         deleteAllSqlQuery = "DELETE FROM users";
