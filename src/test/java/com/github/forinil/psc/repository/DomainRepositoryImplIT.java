@@ -43,7 +43,7 @@ public class DomainRepositoryImplIT {
     }
 
     @Test
-    public void testCreatingDomain() throws DatabaseException {
+    public void testCreate() throws DatabaseException {
         val domainString = "localhost.localdomain";
         val domain = Domain.of(domainString);
 
@@ -52,7 +52,7 @@ public class DomainRepositoryImplIT {
     }
 
     @Test
-    public void testReadingDomain() throws DatabaseException {
+    public void testRead() throws DatabaseException {
         val domainString = "localhost.localdomain";
         val domain = Domain.of(domainString);
 

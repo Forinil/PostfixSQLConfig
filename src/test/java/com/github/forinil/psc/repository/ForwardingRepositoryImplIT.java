@@ -42,7 +42,7 @@ public class ForwardingRepositoryImplIT {
     }
 
     @Test
-    public void testCreatingDomain() throws DatabaseException {
+    public void testCreate() throws DatabaseException {
         val sourceString = "source";
         val destinationString = "destination";
         val forwarding = Forwarding.of(sourceString, destinationString);
@@ -52,7 +52,7 @@ public class ForwardingRepositoryImplIT {
     }
 
     @Test
-    public void testReadingDomain() throws DatabaseException {
+    public void testRead() throws DatabaseException {
         val sourceString = "source";
         val destinationString = "destination";
         val forwarding = Forwarding.of(sourceString, destinationString);

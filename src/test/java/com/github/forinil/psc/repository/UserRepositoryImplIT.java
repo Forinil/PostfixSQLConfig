@@ -42,7 +42,7 @@ public class UserRepositoryImplIT {
     }
 
     @Test
-    public void testCreatingDomain() throws DatabaseException {
+    public void testCreate() throws DatabaseException {
         val userString = "kbotor";
         val user = User.of(userString, userString);
 
@@ -51,7 +51,7 @@ public class UserRepositoryImplIT {
     }
 
     @Test
-    public void testReadingDomain() throws DatabaseException {
+    public void testRead() throws DatabaseException {
         val userString = "kbotor";
         val user = User.of(userString, userString);
 
