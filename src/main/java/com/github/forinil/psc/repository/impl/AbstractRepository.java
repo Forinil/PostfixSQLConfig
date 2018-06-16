@@ -2,9 +2,11 @@ package com.github.forinil.psc.repository.impl;
 
 import com.github.forinil.psc.entity.Entity;
 import com.github.forinil.psc.exception.database.DatabaseException;
+import com.github.forinil.psc.exception.database.NoRowsUpdatedException;
 import com.github.forinil.psc.repository.Repository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -67,7 +69,10 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
     @Transactional
     public void update(@NonNull EntityType entity) throws DatabaseException {
         try {
-            jdbcTemplate.update(updateSqlQuery, getParameterSourceFromEntity(entity));
+            val rowsUpdated = jdbcTemplate.update(updateSqlQuery, getParameterSourceFromEntity(entity));
+            if (rowsUpdated == 0) {
+                throw new NoRowsUpdatedException(String.format("No rows updated. Please check if entity with id '%s' exists.", entity.id()));
+            }
         } catch (DataAccessException e) {
             logger.error("Error inserting entity to database", e);
             throw new DatabaseException(e);
