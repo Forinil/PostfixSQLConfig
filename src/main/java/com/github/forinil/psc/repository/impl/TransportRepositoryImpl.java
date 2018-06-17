@@ -9,12 +9,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.Validator;
+
 @Repository
 public class TransportRepositoryImpl extends AbstractRepository<String, Transport> implements TransportRepository {
 
     TransportRepositoryImpl(@Autowired NamedParameterJdbcTemplate jdbcTemplate,
-                            @Autowired RowMapper<Transport> rowMapper) {
-        super(jdbcTemplate, rowMapper);
+                            @Autowired RowMapper<Transport> rowMapper,
+                            @Autowired Validator validator) {
+        super(jdbcTemplate, rowMapper, validator);
         insertSqlQuery = "INSERT INTO transport (domain, transport) VALUES (:domain, :transport)";
         selectSqlQuery = "SELECT * FROM transport WHERE domain = :id";
         updateSqlQuery = "UPDATE transport SET transport = :transport WHERE domain = :domain";

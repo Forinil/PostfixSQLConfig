@@ -12,12 +12,15 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Validator;
+
 @Repository
 public class DomainRepositoryImpl extends AbstractRepository<String, Domain> implements DomainRepository {
 
     public DomainRepositoryImpl(@Autowired NamedParameterJdbcTemplate jdbcTemplate,
-                                @Autowired DomainRowMapper domainRowMapper) {
-        super(jdbcTemplate, domainRowMapper);
+                                @Autowired DomainRowMapper domainRowMapper,
+                                @Autowired Validator validator) {
+        super(jdbcTemplate, domainRowMapper, validator);
         insertSqlQuery = "INSERT INTO domains (domain) VALUES (:domain)";
         selectSqlQuery = "SELECT * FROM domains WHERE domain = :id";
         deleteSqlQuery = "DELETE FROM domains WHERE domain = :id";

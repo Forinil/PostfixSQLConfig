@@ -30,8 +30,8 @@ public class UserRepositoryImplIT {
     @Before
     public void setUpDatabase() {
         val users = new ArrayList<Object[]>(CAPACITY);
-        users.add(new String[]{"user1", "password"});
-        users.add(new String[]{"user2", "password"});
+        users.add(new String[]{"user1@example.com", "password"});
+        users.add(new String[]{"user2@example.com", "password"});
 
         jdbcTemplate.batchUpdate("INSERT INTO users (email, password) VALUES (?, ?)", users);
     }
@@ -43,20 +43,20 @@ public class UserRepositoryImplIT {
 
     @Test
     public void testCreate() throws DatabaseException {
-        val userString = "kbotor";
-        val user = User.of(userString, userString);
+        val email = "kbotor@example.com";
+        val user = User.of(email, email);
 
         val id = userRepository.create(user);
-        Assert.assertEquals(userString, id);
+        Assert.assertEquals(email, id);
     }
 
     @Test
     public void testRead() throws DatabaseException {
-        val userString = "kbotor";
-        val user = User.of(userString, userString);
+        val email = "kbotor@example.com";
+        val user = User.of(email, email);
 
         val id = userRepository.create(user);
-        Assert.assertEquals(userString, id);
+        Assert.assertEquals(email, id);
 
         val readUser = userRepository.read(id);
         Assert.assertEquals(id, readUser.getEmail());
@@ -71,7 +71,7 @@ public class UserRepositoryImplIT {
 
     @Test
     public void testUpdate() throws DatabaseException {
-        val user = User.of("user1", "new_password");
+        val user = User.of("user1@example.com", "new_password");
         userRepository.update(user);
 
         val updatedUser = userRepository.read(user.id());
