@@ -50,6 +50,7 @@ public class UserServiceImplTest {
         val password = "password";
         val userCreateModel = UserCreateModel.of(email, password, password);
         when(userRepository.create(any(User.class))).thenReturn(email);
+        when(userRepository.read(anyString())).thenReturn(null);
 
         val id = userService.create(userCreateModel);
 

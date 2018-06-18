@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public String create(@NotNull UserCreateModel userCreateModel) throws ServiceException {
         try {
             val user = userRepository.read(userCreateModel.getEmail());
-            if (user != null) {
+            if (user == null) {
                 val encodedPassword = passwordEncoder.encode(userCreateModel.getPassword());
                 return userRepository.create(User.of(userCreateModel.getEmail(), encodedPassword));
             } else {
