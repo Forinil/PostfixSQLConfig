@@ -2,6 +2,7 @@ package com.github.forinil.psc.service.impl;
 
 import com.github.forinil.psc.entity.User;
 import com.github.forinil.psc.exception.database.DatabaseException;
+import com.github.forinil.psc.exception.service.EntityAlreadyExistsException;
 import com.github.forinil.psc.exception.service.ServiceException;
 import com.github.forinil.psc.model.create.UserCreateModel;
 import com.github.forinil.psc.model.edit.UserEditModel;
@@ -34,12 +35,17 @@ public class UserServiceImpl implements UserService {
     @NotNull
     @NotEmpty
     @Override
-    public String create(@NotNull UserCreateModel userEditModel) throws ServiceException {
-        val encodedPassword = passwordEncoder.encode(userEditModel.getPassword());
+    public String create(@NotNull UserCreateModel userCreateModel) throws ServiceException {
         try {
-            return userRepository.create(User.of(userEditModel.getEmail(), encodedPassword));
+            val user = userRepository.read(userCreateModel.getEmail());
+            if (user != null) {
+                val encodedPassword = passwordEncoder.encode(userCreateModel.getPassword());
+                return userRepository.create(User.of(userCreateModel.getEmail(), encodedPassword));
+            } else {
+                throw new EntityAlreadyExistsException(String.format("User with email %s already exists", userCreateModel.getEmail()));
+            }
         } catch (DatabaseException e) {
-            throw new ServiceException(String.format("Cannot create user %s", userEditModel), e);
+            throw new ServiceException(String.format("Cannot create user %s", userCreateModel), e);
         }
     }
 

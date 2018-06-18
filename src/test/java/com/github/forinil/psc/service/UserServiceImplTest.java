@@ -8,7 +8,6 @@ import com.github.forinil.psc.model.edit.UserEditModel;
 import com.github.forinil.psc.model.view.UserViewModel;
 import com.github.forinil.psc.repository.UserRepository;
 import com.github.forinil.psc.service.impl.UserServiceImpl;
-import lombok.experimental.var;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
