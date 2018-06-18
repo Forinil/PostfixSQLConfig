@@ -2,6 +2,7 @@ package com.github.forinil.psc.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(staticName = "of")
 public class Domain implements Entity<String> {
     @NotNull
+    @NotEmpty
     private final String domain;
 
     @Override

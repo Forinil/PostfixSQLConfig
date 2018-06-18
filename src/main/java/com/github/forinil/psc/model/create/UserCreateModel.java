@@ -1,4 +1,4 @@
-package com.github.forinil.psc.model.edit;
+package com.github.forinil.psc.model.create;
 
 import com.github.forinil.psc.validation.constraint.ValidatePasswordsMatch;
 import lombok.Data;
@@ -8,8 +8,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data(staticConstructor = "of")
-@ValidatePasswordsMatch
-public class UserEditModel {
+@ValidatePasswordsMatch(newPasswordFieldName = "password", confirmNewPasswordFieldName = "confirmPassword")
+public class UserCreateModel {
     @Email
     @NotNull
     @NotEmpty
@@ -21,9 +21,5 @@ public class UserEditModel {
 
     @NotNull
     @NotEmpty
-    private final String newPassword;
-
-    @NotNull
-    @NotEmpty
-    private final String confirmNewPassword;
+    private final String confirmPassword;
 }

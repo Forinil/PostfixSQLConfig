@@ -3,11 +3,13 @@ package com.github.forinil.psc.service.impl;
 import com.github.forinil.psc.entity.User;
 import com.github.forinil.psc.exception.database.DatabaseException;
 import com.github.forinil.psc.exception.service.ServiceException;
+import com.github.forinil.psc.model.create.UserCreateModel;
 import com.github.forinil.psc.model.edit.UserEditModel;
 import com.github.forinil.psc.model.view.UserViewModel;
 import com.github.forinil.psc.repository.UserRepository;
 import com.github.forinil.psc.service.UserService;
 import lombok.val;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @NotNull
+    @NotEmpty
     @Override
-    public String create(@NotNull UserEditModel userEditModel) throws ServiceException {
+    public String create(@NotNull UserCreateModel userEditModel) throws ServiceException {
         val encodedPassword = passwordEncoder.encode(userEditModel.getPassword());
         try {
             return userRepository.create(User.of(userEditModel.getEmail(), encodedPassword));
@@ -69,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(@NotNull UserEditModel entity) throws ServiceException {
+    public void delete(@NotNull UserViewModel entity) throws ServiceException {
         deleteById(entity.getEmail());
     }
 
