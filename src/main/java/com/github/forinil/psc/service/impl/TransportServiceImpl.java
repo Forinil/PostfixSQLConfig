@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class TransportServiceImpl implements TransportService {
     
     @NotNull
     @Override
-    public String create(@NotNull TransportCreateModel transportCreateModel) throws ServiceException {
+    public String create(@NotNull @Valid TransportCreateModel transportCreateModel) throws ServiceException {
         try {
             val transport = transportRepository.read(transportCreateModel.getDomain());
             if (transport == null) {
@@ -52,7 +53,7 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
-    public void update(@NotNull TransportEditModel transportEditModel) throws ServiceException {
+    public void update(@NotNull @Valid TransportEditModel transportEditModel) throws ServiceException {
         try {
             transportRepository.update(Transport.of(transportEditModel.getDomain(), transportEditModel.getTransport()));
         } catch (DatabaseException e) {
@@ -70,7 +71,7 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
-    public void delete(@NotNull TransportViewModel transportViewModel) throws ServiceException {
+    public void delete(@NotNull @Valid TransportViewModel transportViewModel) throws ServiceException {
         deleteById(transportViewModel.getDomain());
     }
 
@@ -94,7 +95,7 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @NotNull
-    private TransportViewModel entityToViewModel(@NotNull Transport transport) {
+    private TransportViewModel entityToViewModel(@NotNull @Valid Transport transport) {
         return TransportViewModel.of(transport.getDomain(), transport.getTransport());
     }
 

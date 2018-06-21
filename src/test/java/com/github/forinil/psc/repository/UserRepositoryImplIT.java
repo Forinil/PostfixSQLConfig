@@ -80,7 +80,7 @@ public class UserRepositoryImplIT {
 
     @Test
     public void testDelete() throws DatabaseException {
-        val userString = "user1";
+        val userString = "user@example.com";
         val user = User.of(userString, userString);
 
         userRepository.delete(user);

@@ -12,15 +12,15 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Validator;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Repository
 public class DomainRepositoryImpl extends AbstractRepository<String, Domain> implements DomainRepository {
 
     public DomainRepositoryImpl(@Autowired NamedParameterJdbcTemplate jdbcTemplate,
-                                @Autowired DomainRowMapper domainRowMapper,
-                                @Autowired Validator validator) {
-        super(jdbcTemplate, domainRowMapper, validator);
+                                @Autowired DomainRowMapper domainRowMapper) {
+        super(jdbcTemplate, domainRowMapper);
         insertSqlQuery = "INSERT INTO domains (domain) VALUES (:domain)";
         selectSqlQuery = "SELECT * FROM domains WHERE domain = :id";
         deleteSqlQuery = "DELETE FROM domains WHERE domain = :id";
@@ -34,8 +34,9 @@ public class DomainRepositoryImpl extends AbstractRepository<String, Domain> imp
         throw new ActionNotSupportedException("Domain entities are read-only");
     }
 
+    @NotNull
     @Override
-    SqlParameterSource getParameterSourceFromEntity(Domain entity) {
+    SqlParameterSource getParameterSourceFromEntity(@NotNull @Valid Domain entity) {
         return new DomainSqlParameterSource(entity);
     }
 }

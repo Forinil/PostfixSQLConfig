@@ -2,10 +2,8 @@ package com.github.forinil.psc.repository.impl;
 
 import com.github.forinil.psc.entity.Entity;
 import com.github.forinil.psc.exception.database.DatabaseException;
-import com.github.forinil.psc.exception.database.DatabaseValidationException;
 import com.github.forinil.psc.exception.database.NoRowsUpdatedException;
 import com.github.forinil.psc.repository.Repository;
-import com.github.forinil.psc.util.ConstraintViolationInformation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.dao.DataAccessException;
@@ -20,19 +18,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Validated
 abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements Repository<ID, EntityType> {
     private NamedParameterJdbcTemplate jdbcTemplate;
     private RowMapper<EntityType> rowMapper;
-    private Validator validator;
 
     String insertSqlQuery;
     String selectSqlQuery;
@@ -42,22 +36,16 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
     String deleteAllSqlQuery;
 
     AbstractRepository(NamedParameterJdbcTemplate jdbcTemplate,
-                       RowMapper<EntityType> rowMapper,
-                       Validator validator) {
+                       RowMapper<EntityType> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.rowMapper = rowMapper;
-        this.validator = validator;
     }
 
     @Override
     @Transactional
     @SuppressWarnings("unchecked")
-    public @NotNull ID create(@NotNull Entity<ID> entity) throws DatabaseException {
+    public @NotNull ID create(@NotNull @Valid Entity<ID> entity) throws DatabaseException {
         try {
-            Set<ConstraintViolation<Entity<ID>>> validationResult = validator.validate(entity);
-            if (!validationResult.isEmpty()) {
-                throw new DatabaseValidationException("", getViolationInformation(validationResult));
-            }
             jdbcTemplate.update(insertSqlQuery, getParameterSourceFromEntityInternal((EntityType) entity));
         } catch (DataAccessException e) {
             logger.error("Error inserting entity to database", e);
@@ -82,12 +70,8 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
 
     @Override
     @Transactional
-    public void update(@NotNull EntityType entity) throws DatabaseException {
+    public void update(@NotNull @Valid EntityType entity) throws DatabaseException {
         try {
-            Set<ConstraintViolation<EntityType>> validationResult = validator.validate(entity);
-            if (!validationResult.isEmpty()) {
-                throw new DatabaseValidationException("", getViolationInformation(validationResult));
-            }
             val rowsUpdated = jdbcTemplate.update(updateSqlQuery, getParameterSourceFromEntityInternal(entity));
             if (rowsUpdated == 0) {
                 throw new NoRowsUpdatedException(String.format("No rows updated. Please check if entity with id '%s' exists.", entity.id()));
@@ -111,8 +95,7 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
 
     @Override
     @Transactional
-    public void delete(@NotNull Entity<ID> entity) throws DatabaseException {
-        validator.validate(entity);
+    public void delete(@NotNull @Valid Entity<ID> entity) throws DatabaseException {
         deleteById(entity.id());
     }
 
@@ -140,25 +123,13 @@ abstract class AbstractRepository<ID, EntityType extends Entity<ID>> implements 
         }
     }
 
-    abstract @NotNull SqlParameterSource getParameterSourceFromEntity(@NotNull EntityType entity);
+    abstract @NotNull SqlParameterSource getParameterSourceFromEntity(@NotNull @Valid EntityType entity);
 
-    private @NotNull SqlParameterSource getParameterSourceFromEntityInternal(@NotNull EntityType entity) {
-        validator.validate(entity);
+    private @NotNull SqlParameterSource getParameterSourceFromEntityInternal(@NotNull @Valid EntityType entity) {
         return getParameterSourceFromEntity(entity);
     }
 
     private @NotNull SqlParameterSource getIDProvidingParameterSource(@NotNull ID id) {
         return new MapSqlParameterSource("id", id);
-    }
-
-    private @NotNull <T> Set<ConstraintViolationInformation> getViolationInformation(@NotNull Set<ConstraintViolation<T>> validationResult) {
-        Set<ConstraintViolationInformation> constraintViolationInformationSet = new HashSet<ConstraintViolationInformation>(validationResult.size());
-
-        for (ConstraintViolation<T> constraintViolation: validationResult) {
-            val constraintViolationInformation = ConstraintViolationInformation.builder().message(constraintViolation.getMessage()).object(constraintViolation.getRootBean()).build();
-            constraintViolationInformationSet.add(constraintViolationInformation);
-        }
-
-        return constraintViolationInformationSet;
     }
 }

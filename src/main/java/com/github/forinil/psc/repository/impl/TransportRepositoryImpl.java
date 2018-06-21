@@ -9,15 +9,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.Validator;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Repository
 public class TransportRepositoryImpl extends AbstractRepository<String, Transport> implements TransportRepository {
 
     TransportRepositoryImpl(@Autowired NamedParameterJdbcTemplate jdbcTemplate,
-                            @Autowired RowMapper<Transport> rowMapper,
-                            @Autowired Validator validator) {
-        super(jdbcTemplate, rowMapper, validator);
+                            @Autowired RowMapper<Transport> rowMapper) {
+        super(jdbcTemplate, rowMapper);
         insertSqlQuery = "INSERT INTO transport (domain, transport) VALUES (:domain, :transport)";
         selectSqlQuery = "SELECT * FROM transport WHERE domain = :id";
         updateSqlQuery = "UPDATE transport SET transport = :transport WHERE domain = :domain";
@@ -26,8 +26,9 @@ public class TransportRepositoryImpl extends AbstractRepository<String, Transpor
         deleteAllSqlQuery = "DELETE FROM transport";
     }
 
+    @NotNull
     @Override
-    SqlParameterSource getParameterSourceFromEntity(Transport entity) {
+    SqlParameterSource getParameterSourceFromEntity(@NotNull @Valid Transport entity) {
         return new TransportSqlParameterSource(entity);
     }
 }

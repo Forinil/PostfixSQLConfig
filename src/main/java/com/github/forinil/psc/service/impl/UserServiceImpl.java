@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @NotNull
     @NotEmpty
     @Override
-    public String create(@NotNull UserCreateModel userCreateModel) throws ServiceException {
+    public String create(@NotNull @Valid UserCreateModel userCreateModel) throws ServiceException {
         try {
             val user = userRepository.read(userCreateModel.getEmail());
             if (user == null) {
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(@NotNull UserEditModel userEditModel) throws ServiceException {
+    public void update(@NotNull @Valid UserEditModel userEditModel) throws ServiceException {
         val encodedPassword = passwordEncoder.encode(userEditModel.getNewPassword());
         try {
             userRepository.create(User.of(userEditModel.getEmail(), encodedPassword));
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(@NotNull UserViewModel entity) throws ServiceException {
+    public void delete(@NotNull @Valid UserViewModel entity) throws ServiceException {
         deleteById(entity.getEmail());
     }
 
@@ -102,7 +103,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @NotNull
-    private UserViewModel entityToViewModel(@NotNull User user) {
+    private UserViewModel entityToViewModel(@NotNull @Valid User user) {
         return UserViewModel.of(user.getEmail(), user.getPassword());
     }
 
