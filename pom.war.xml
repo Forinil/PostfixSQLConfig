@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.forinil.psc</groupId>
-    <artifactId>postfixsqlconfig</artifactId>
+    <artifactId>postfixsqlconfig-war</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>postfixsqlconfig</name>
+    <name>postfixsqlconfig-war</name>
     <description>Application for managing Postfix SQL configuration with schema as described in
         https://www.linode.com/docs/email/postfix/email-with-postfix-dovecot-and-mysql-on-centos-5/
     </description>

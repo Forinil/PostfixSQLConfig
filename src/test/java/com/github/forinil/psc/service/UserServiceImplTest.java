@@ -102,7 +102,7 @@ public class UserServiceImplTest {
         val email = "kbotor@gmail.com";
         val password = "password";
         val user = User.of(email, password);
-        val users = new ArrayList<User>();
+        val users = new ArrayList<User>(1);
         users.add(user);
         when(userRepository.readAll()).thenReturn(users);
 
