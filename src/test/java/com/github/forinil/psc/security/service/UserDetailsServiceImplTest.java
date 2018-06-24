@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import static com.github.forinil.psc.security.service.UserDetailsServiceImpl.USER;
 import static org.junit.Assert.assertEquals;
@@ -29,8 +28,9 @@ public class UserDetailsServiceImplTest {
     private UserDetailsService userDetailsService;
 
     @Before
+    @SuppressWarnings("deprecation")
     public void setUp() {
-        val userService = new UserServiceImpl(userRepository, NoOpPasswordEncoder.getInstance());
+        val userService = new UserServiceImpl(userRepository, org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance());
         userDetailsService = new UserDetailsServiceImpl(userService);
     }
 
