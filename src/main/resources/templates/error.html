@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+    <meta charset="UTF-8" />
+    <title>Error</title>
+</head>
+<body>
+    <header>
+        <div th:replace="fragments/header :: heading">Heading</div>
+    </header>
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-danger" th:text="|${status} - ${error}|">Error</h5>
+                <p class="card-text text-danger">
+                    Timestamp: <span th:utext="${#dates.format(timestamp, 'dd-MM-yyyy HH:mm:ss.SSS')}">2018-06-19 14:16:41.871</span><br />
+                    Message: <span th:utext="${message}">Error message</span><br />
+                    Path: <span th:utext="${path}">/error</span>
+                </p>
+                <a href="home.html" th:href="@{/}" class="btn btn-primary">Back to Home Page</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

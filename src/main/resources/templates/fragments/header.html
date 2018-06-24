@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <title>Postfix SQL Config</title>
+</head>
+<body>
+    <div class="card" th:fragment="heading">
+        <div class="card-body bg-info">
+            <h3 class="card-title text-white text-center">Postfix SQL Config</h3>
+        </div>
+    </div>
+    <nav class="navbar navbar-light bg-light" th:fragment="nav">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="d-inline-flex flex-row border border-success rounded bg-white" sec:authorize="isAuthenticated()">
+            <p class="login-box align-middle text-success pl-1 pr-1 mr-1">
+                Logged user: <span class="badge badge-success" sec:authentication="name">Bob</span>
+            </p>
+            <form class="form-inline mr-1" action="/logout" th:action="@{/logout}" method="post">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+        <form class="form-inline bg-white" sec:authorize="!isAuthenticated()" action="/login" th:action="@{/login}" method="post">
+            <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username" name="username"/>
+            <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" name="password"/>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+        </form>
+    </nav>
+    <div class="collapse" id="sidebar" th:fragment="menu">
+        <ul class="list-unstyled components">
+            <li class="active">
+                <a class="menu-link btn btn-outline-info" href="/" th:href="@{/}">Home</a>
+            </li>
+            <li>
+                <a class="menu-link btn btn-outline-info" href="/details" th:href="@{/details}">User details</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
