@@ -11,3 +11,8 @@ spring:
     fallback-to-system-locale: false
   thymeleaf:
     mode: HTML5
+psc:
+  admin:
+    username: root
+    password: b5371f7d-06b1-44be-a781-46b71a6caeaa
+    domain: localhost
