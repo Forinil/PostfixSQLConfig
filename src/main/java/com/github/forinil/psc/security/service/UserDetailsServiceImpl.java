@@ -19,8 +19,9 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    static final String USER = "USER";
-    static final String ADMIN = "ADMIN";
+    public static final String USER = "USER";
+    public static final String ADMIN = "ADMIN";
+    public static final String ACTUATOR = "ACTUATOR";
 
     private UserService userService;
 
@@ -48,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     .accountExpired(accountExpired)
                     .credentialsExpired(credentialsExpired)
                     .accountLocked(accountLocked)
-                    .roles(USER, ADMIN)
+                    .roles(USER, ADMIN, ACTUATOR)
                     .build();
         }
 
