@@ -56,6 +56,7 @@ public class UserServiceImplTest {
 
         assertEquals(email, id);
         verify(passwordEncoder).encode(password);
+        verify(userRepository).read(email);
         verify(userRepository).create(User.of(email, ENCODED_PASSWORD));
     }
 

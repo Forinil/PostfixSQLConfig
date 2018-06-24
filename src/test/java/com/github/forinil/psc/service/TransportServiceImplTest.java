@@ -48,6 +48,7 @@ public class TransportServiceImplTest {
 
         assertEquals(domainString, id);
         verify(transportRepository).read(domainString);
+        verify(transportRepository).create(Transport.of(domainString, transportString));
     }
 
     @Test
